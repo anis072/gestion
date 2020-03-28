@@ -29,15 +29,15 @@
                   </thead>
                   <tbody>
 
-                    <tr v-for="user in users" :key="user.id">
+                    <tr v-for="user in users.data" :key="user.id">
+
                       <td>{{ user.name }}</td>
                       <td>{{ user.email }}</td>
-
                       <td>{{ user.role }}</td>
                       <td>{{ user.tel }}</td>
                       <td>{{ user.created_at | date }}</td>
                       <td>
-                            <a href="#" class="btn" style="background-color: #00a8cc"><i style="color:#fff;" class="fas fa-user-edit" @click="editMembre(user)" ></i></a>
+                            <a  class="btn"  style="background-color: #00a8cc"><i style="color:#fff;"  @click="editMembre(user)" class="fas fa-user-edit" ></i></a>
                            <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"  @click="supprimerMembre(user.id)"></i></a>
                   </td>
                     </tr>
@@ -47,6 +47,7 @@
               </div>
               <!-- /.card-body -->
             </div>
+            <pagination :data="users" @pagination-change-page="getResults"></pagination>
             </div>
         </div>
         <!-- Modal -->
@@ -139,9 +140,14 @@
         },
 
                methods:{
-
+              getResults(page = 1) {
+			axios.get('api/membre?page=' + page)
+				.then(response => {
+					this.users = response.data;
+                });
+               },
                    afficherMembre(){
-                   axios.get('api/membre').then(({ data }) =>(this.users = data.data));
+                   axios.get('api/membre').then(({ data }) =>(this.users = data));
                    },
                ajouterMembre(){
                 this.form.post('api/membre').then(()=>{

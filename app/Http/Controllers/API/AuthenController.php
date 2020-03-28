@@ -16,12 +16,12 @@ class AuthenController extends Controller
      */
 
         public function login(Request $request){
-  $validation= $this->validate($request,[
+        $validation= $this->validate($request,[
            'email'  =>'required|email',
            'password'=>'required',
           ]);
 
-       if(!Auth::attempt($validation)){
+    /**    if(!Auth::attempt($validation)){
            return response(['status'=>'error','message'=>'user Undefined']);
        }
      $accesToken =Auth::user()->createToken('TokenName')->accessToken;
@@ -29,12 +29,12 @@ class AuthenController extends Controller
     }
     public function userauth(){
       return Auth::user()->first();
-    }
+    }*/
 
 
 
 
-        /**    $http = new GuzzleHttp\Client;
+          $http = new GuzzleHttp\Client;
 
 $response = $http->post(url('oauth/token'), [
     'form_params' => [
@@ -46,9 +46,10 @@ $response = $http->post(url('oauth/token'), [
         'scope' => '',
     ],
 
-]);**/
+]);
 
 
 
 }
 
+}

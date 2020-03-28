@@ -26,7 +26,7 @@
                   </thead>
                   <tbody>
 
-                    <tr v-for="client in clients" :key="client.id" >
+                    <tr v-for="client in clients.data" :key="client.id" >
                        <router-link :to="`/client/${client.id}`" style="text-decoration:none; color:black;"> <td>{{ client.name }}</td></router-link>
                       <td >{{ client.email }}</td>
                       <td>{{ client.tel }}</td>
@@ -42,6 +42,7 @@
               </div>
               <!-- /.card-body -->
             </div>
+            <pagination :data="clients" @pagination-change-page="getResults"></pagination>
             </div>
         </div>
          <div v-if="!$acces.Admin()">
@@ -106,8 +107,8 @@
         data(){
             return{
                 x:false,
-                clients:{
-                   projets:''
+                clients:{},
+                client:{
                 },
 
                 form : new Form({
@@ -126,7 +127,12 @@
             }
         },
 
-               methods:{
+               methods:{  getResults(page = 1) {
+			axios.get('api/client?page=' + page)
+				.then(response => {
+					this.clients = response.data;
+                });
+               },
                  deleteClient(id){
            seww.fire({
             title: 'Êtes-vous sûr?',
@@ -161,7 +167,7 @@
             },
 
                    afficherClient(){
-                   axios.get('api/client').then(({ data }) =>(this.clients = data.data));
+                   axios.get('api/client').then(({ data }) =>(this.clients = data));
                    },
                ajouterClient(){
                 this.form.post('api/client').then(()=>{
@@ -170,7 +176,7 @@
                 $("#AjouterClient").modal('hide');
 
                 Toast.fire({
-                        type: 'success',
+                        icon: 'success',
                         title: 'Client Ajouter'
                         })
                 }).catch(()=>{
@@ -217,9 +223,8 @@
                  fire.$on('ajoutclient',()=>{
                      this.afficherClient();
                  });
-                 axios.get('api/nameprojet' ).then(({ data }) =>(this.projets = data.data));;
+
 
              }
-
     }
 </script>

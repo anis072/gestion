@@ -20,8 +20,6 @@
                     <tr>
                       <th>Nom</th>
                       <th>Email</th>
-
-
                       <th>Telephone</th>
                       <th>Created_at</th>
                       <th>Operation</th>
@@ -29,7 +27,7 @@
                   </thead>
                   <tbody>
 
-                    <tr v-for="user in users" :key="user.id">
+                    <tr v-for="user in users.data" :key="user.id">
                       <td>{{ user.name }}</td>
                       <td>{{ user.email }}</td>
 
@@ -39,9 +37,6 @@
                       <td >
            <span class="btn" style="background-color: #00a8cc">  <i style="color: #fff" class="fas fa-user-edit" @click="editMembre(user)" ></i></span>
                   <span class="btn btn-danger">  <i  class="fas fa-trash-alt"  @click="supprimerMembre(user.id)"></i></span>
-
-
-
                       </td>
                     </tr>
 
@@ -50,6 +45,7 @@
               </div>
               <!-- /.card-body -->
             </div>
+            <pagination :data="users" @pagination-change-page="getResults"></pagination>
             </div>
         </div>
 
@@ -130,9 +126,14 @@
         },
 
                methods:{
-
+                getResults(page = 1) {
+			    axios.get('api/chef?page=' + page)
+				 .then(response => {
+					this.users = response.data;
+                 });
+               },
                    afficherMembre(){
-                   axios.get('api/chef').then(({ data }) =>(this.users = data.data));
+                   axios.get('api/chef').then(({ data }) =>(this.users = data));
                    },
                ajouterMembre(){
                 this.form.post('api/ajouterChefDeProjet').then(()=>{

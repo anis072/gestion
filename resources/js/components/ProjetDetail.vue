@@ -1,13 +1,47 @@
 <template>
-<div class="container">
+    <div class="container">
         <div class="row justify-content-center">
       <div class="col-md-9 mt-4">
-               <div class="card card-default">
+   <div class="card card-default">
           <div class="card-header" >
             <h3 class="card-title">Detaille De projets:</h3>
+<!-- Button trigger modal -->
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Project Files:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+               <form @submit="formSubmit" enctype="multipart/form-data">
+                 <label for="name">Name</label></input>  <input id="name" class="form-control" type="text" name="name"></input>
+                 <div class="input-group mt-2"><div class="custom-file"><input type="file" name="file" v-on:change="onFileChange" class="custom-file-input"> <label for="exampleInputFile" class="custom-file-label">
+                     Choose file:</label></div></div>
+
+                      <button  class="btn btn-success mt-2">Submit</button>
+
+               </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+      </div>
+    </div>
+  </div>
+</div>
 
             <div class="card-tools">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                   <i class="fas fa-plus"></i>            Project File
+                    </button>
+
               <button type="button" class="btn btn-tool" id="reduit" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
 
             </div>
@@ -15,9 +49,9 @@
           <!-- /.card-header -->
           <div class="card-body" style="display: block;">
             <div class="row">
-               <div v-for="projet in projets"  v-if=" projet.id == key "  :key="projet.id" >
+               <div v-for="projet in projets"  v-if=" projet.id == key"  :key="projet.id" >
                    <label>Nom de Projet:</label>
-                 <p>{{ projet.name }}</p>
+                        <p>{{ projet.name }}</p>
                  <label>Budget de projet:</label>
                  <p>{{ projet.budget }}</p>
                  <label>Durée de Projet :</label>
@@ -26,10 +60,17 @@
                  <p>{{ projet.owner }}</p>
                   <label>Descriptoin de projet:</label>
                  <p>{{ projet.description }}</p>
-                  <label>Fichiers de projet:</label>
-                 <p>*</p>
-                 </div>
-              <!-- /.col -->
+              <label>File of  Project:</label>
+                <div v-for="file in files" :key="file.id" >
+                    <ul >
+                 <li>  <p><a style="text-decoration:none; color:black;"  :href="`//127.0.0.1:8000/upload/${file.file}`" target="_blank"> <i class="fas fa-file-alt"></i>{{ file.file }}</a></p></li>
+                </ul>
+                </div>
+
+
+
+    </div>
+
             </div>
             <!-- /.row -->
 
@@ -44,8 +85,6 @@
                       <div class="card card-default">
           <div class="card-header">
             <h3 class="card-title">les Membres de Projets</h3>
-
-
             <div class="card-tools">
               <button type="button" class="btn btn-tool" id="reduit" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
 
@@ -66,13 +105,8 @@
                    <tbody>
                    <tr  v-for="membre in membres"  v-if=" key == membre.projet_id "  :key="membre.id"  >
                      <td> {{ membre.membre }}  </td>
-                     <td>{{ membre.role }}</td>
-
-
-
-
+                                    <td>{{ membre.role }}</td>
                    </tr>
-
                  </tbody>
                 </table>   <!-- /.form-group -->
               </div>
@@ -189,9 +223,41 @@
                   id:'',
                   body:'',
                   created_at:''
-                }
+                },
+                   files:[],
+               name: '',
+              file:{
+                name:'',
+                id:''
+              },
+              success: ''
                  }},
                  methods:{
+              onFileChange(e){
+                console.log(e.target.files[0]);
+                this.file = e.target.files[0];
+            },
+            formSubmit(e) {
+                e.preventDefault();
+                let currentObj = this;
+
+                const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+
+                let formData = new FormData();
+                formData.append('file', this.file);
+
+                axios.post('/api/formSubmit/'+this.key, formData, config)
+                .then(function (response) {
+                    fire.$emit('ajoutdetail');
+                    $("#exampleModal").modal('hide');
+                    currentObj.success = response.data.success;
+                })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+            },
             afficherProjets(){
             axios.get('/api/getProjects')
                 .then(({data}) => {this.projets=data.data});},
@@ -224,6 +290,10 @@
             },
 
                 created(){
+                    fire.$on('ajoutdetail',()=>{
+                 axios.get('/api/file/'+this.key).then(({data}) => {this.files =data.data});
+                    }),
+                    axios.get('/api/file/'+this.key).then(({data}) => {this.files =data.data});
                     fire.$on('ajoutcommentaire',()=>{
   this.afficherComments();});
                       fire.$on('ajoutcommentaire',()=>{

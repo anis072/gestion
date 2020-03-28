@@ -1,4 +1,8 @@
+<?php
+use App\Projet;
+$projet = Projet::all();
 
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -7,15 +11,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title>#######</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-
+  <style>
+ body{
+   position: relative;
+    height: 650px;
+    margin-left: 200px ;
+ }
+  </style>
   <!-- Font Awesome Icons -->
+  <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/app.css">
   <!-- Google Font: Source Sans Pro -->
+
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini">
@@ -102,7 +115,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="#" class="brand-link">
 
       <span class="brand-text font-weight-light">######</span>
     </a>
@@ -111,11 +124,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
+        <div class="image" >
+                <img src="\img\profile\{{ auth()->user()->photo }}" class="img-circle elevation-2" alt="User Image">
 
         </div>
         <div class="info">
-        <a href="#" class="d-block">{{ Auth::user()->name}}</a>
+        <a href="#" class="d-block"> {{ auth()->user()->name }}</a>
         </div>
       </div>
 
@@ -176,7 +190,40 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </router-link>
           </li>
 @endcan
+@if(! Gate::check('Admin'))
+       <li class="nav-item">
+       <router-link to="/profile/{{auth()->user()->id}}" class="nav-link">
+         <i class="fas fa-user" style="color:#05dfd7" ></i>
+              <p>
+Profile
 
+              </p>
+            </router-link>
+          </li>
+@endif
+
+<li class="nav-item has-treeview menu-open">
+        <a href="#" class="nav-link active">
+          <i class="nav-icon fas fa-tasks"></i>
+          <p>
+            Gantt
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        @foreach ($projet   as $project)
+
+
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <router-link :to="`/gantt/{{$project->id}}`" class="nav-link ">
+              <i class="far fas fa-tasks"  style="color:#05dfd7"></i>
+              <p>Gantt :{{ $project->name }} </p>
+            </router-link>
+          </li>
+
+        </ul>
+        @endforeach
+      </li>
           <li class="nav-item">
             <router-link to="/calendrier" class="nav-link">
              <i class="fas fa-calendar-plus" style="color:#05dfd7" ></i>
@@ -204,7 +251,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </router-link>
           </li>
-    <li class="nav-item">
+    <li >
     <a class="nav-link" href="{{ route('logout') }}"
           onclick="event.preventDefault();
          document.getElementById('logout-form').submit();">
@@ -268,6 +315,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 window.user =@json(auth()->user())
 </script>
 @endauth
+<script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+
+
 <script src="/js/app.js"></script>
 </body>
 </html>

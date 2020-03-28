@@ -17,12 +17,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/home', 'API\HomeController@index')->name('home');
-Route::post('/login','API\AuthenController@login');
-Route::post('/userauth','API\AuthenController@userauth');
+//Route::post('/login','API\AuthenController@login');
+//Route::post('/userauth','API\AuthenController@userauth');
+//Gantt
+Route::get('/data/{id}', 'API\GanttController@get');
 
+Route::resource('task', 'API\TaskController');
+Route::resource('link', 'API\LinkController');
+//file
+Route::get('/file/{id}','API\FileController@files');
+Route::post('formSubmit/{id}','API\FileController@formSubmit');
 //User
+Route::put('profile', 'API\UserController@updateProfile');
 Route::apiResource('client' ,'API\UserController@dashbord');
 Route::get('membrep','API\UserController@Membreprojet');
+Route::get('membrechef','API\UserController@Membrechefprojet');
 Route::get('/chef', 'API\UserController@chef');
 Route::post('/ajouterChefDeProjet','API\UserController@ajouterChefDeProjet');
 Route::post('user-login' ,'API\UserController@login');
@@ -35,8 +44,9 @@ Route::apiResource('/userprojet' ,'API\UserProjetController');
 Route::get('/membreid','API\UserProjetController@show');
 Route::get('/projetsuser','API\UserProjetController@projetuser');
 Route::post('/chefdeprojet','API\UserProjetController@storeChef');
-Route::get('/getProjectsUserConnecte', 'API\UserProjetController@getProjectsUserConnecte');
+//Route::get('/getProjectsUserConnecte', 'API\UserProjetController@getProjectsUserConnecte');
 Route::post('/chefdeprojetparchef','API\UserProjetController@storeChefparchef');
+Route::get('/getProjectsUserConnecte', 'API\ProjetController@getProjectsUserConnecte');
 //Client
 Route::post('/api/clientpname','API\CLientController@updatename');
 Route::get('nameprojet' ,'API\CLientController@nomdeprojet');

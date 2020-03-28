@@ -4,6 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 import Vue from 'vue'
+//import gantt from '@types/dhtmlxgantt'
 import VueRouter from 'vue-router'
 import moment from 'moment'
 import seww from "sweetalert2"
@@ -29,6 +30,9 @@ import clientdetail from './components/ClientDetail.vue'
 import projectemploye from './components/ProjectEmploye.vue'
 import 'fullcalendar/dist/fullcalendar.css'
 import FullCalendar from 'vue-full-calendar';
+import home from './components/home.vue'
+import gant from './components/Gantt.vue'
+import profile from './components/profile.vue'
 /**npm instal
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -55,16 +59,20 @@ const Toast = seww.mixin({
   window.Toast=Toast;
 window.fire =new Vue();
 const routes = [
+    { path: '/gantt/:id', component: gant },
     { path: '/project', component: project },
     { path: '/calendrier', component: calendar },
     { path: '/setting', component: setting },
     { path: '/client', component: client },
-    {path: '/detail/:id', name: detail , component: detail },
-    {path: '/membre', component: membre },
-    {path: '/test', component: test },
+    { path: '/detail/:id', name: detail , component: detail },
+    { path: '/membre', component: membre },
+    { path: '/test', component: test },
     { path: '/projectemploye' , component: projectemploye },
-    {path: '/Chefprojet', component: chef},
-    {path: '/client/:id' , component: clientdetail }
+    { path: '/Chefprojet', component: chef},
+    { path: '/client/:id' , component: clientdetail },
+    { path: '/home' , component: home },
+    { path: '/profile/:id' , component: profile },
+    { path: '*' , component:    require('./components/404.vue').default }
 
 
 
@@ -92,6 +100,8 @@ Vue.component(
     'not-found',
     require('./components/404.vue').default
 );
+Vue.component('pagination', require('laravel-vue-pagination'));
+
 
 Vue.filter('date',function(datee){
 return moment(datee).format('MMMM Do YY');

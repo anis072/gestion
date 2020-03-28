@@ -12,6 +12,7 @@ use App\Role;
 use Illuminate\Http\Request;
 
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProjetController extends Controller
 {
@@ -26,7 +27,7 @@ class ProjetController extends Controller
      */
     public function index()
     {
-        return Projet::latest()->paginate(15);
+        return Projet::latest()->paginate(8);
 
     }
 
@@ -38,7 +39,14 @@ class ProjetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
+    public function getProjectsUserConnecte(){
+      //  $user = User::with('projets');
+        //return $user->projets;
+         
+  //$user=User::where('id',4)->first();
+ // $user=Auth::user();
+  return auth()->user()->projects;
+    }
 
 
      public function store(Request $request)
@@ -50,7 +58,7 @@ class ProjetController extends Controller
 
             'name' => 'required|string|max:50',
             'durre' =>  'required|string|max:50',
-            'description'=>'required|string|max:250',
+            'description'=>'required|string|max:2250',
             'client_id' => 'required',
             'budget' => 'required',
               ]);

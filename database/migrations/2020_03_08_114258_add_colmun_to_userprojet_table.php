@@ -13,7 +13,7 @@ class AddColmunToUserprojetTable extends Migration
      */
     public function up()
     {
-        Schema::table('user_projet', function (Blueprint $table) {
+        Schema::table('projet_user', function (Blueprint $table) {
             //
             $table->string('role')->nullable();
         });

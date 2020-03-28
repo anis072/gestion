@@ -22,7 +22,7 @@ class CLientController extends Controller
     public function index()
     {
         //
-        return Client::latest()->paginate(15);
+        return Client::latest()->paginate(8);
 
     }
     public function clientprojet(){
@@ -61,10 +61,8 @@ $this->validate($request, [
         Mail::to($request->email)->send(new ClientMail($request->password));
     }
     public function nomdeprojet(Request $request){
-         $data =$request->all();
-         $client = Client::get();
-
-        return  $projets=Projet::where('id',$client->id);
+        $client = Client::latest()->paginate(50);
+        return Projet::where('client_id',$client->id);
 
 
     }

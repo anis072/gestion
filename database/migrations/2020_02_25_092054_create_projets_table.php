@@ -19,7 +19,6 @@ class CreateProjetsTable extends Migration
             $table->string('durre')->nullable();
             $table->text('description');
             $table->unsignedBigInteger('user_id')->nullable();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('owner')->nullable();
 

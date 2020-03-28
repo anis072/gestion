@@ -1,16 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
 
-                <div class="card-header">{{ __('Login') }}</div>
+<div class="container" class="hold-transition login-page">
+
+
+
+  <!--  <login-form></login-form>-->
+    <div class="row justify-content-center">
+        <div class="col-md-6 ">
+
+                        <div class="login-logo mt-10">
+                         <b>######</b>######
+                        </div>
+
+            <div class="card" >
+
+                    <div class="card-header" style="background-color: #1567d8;"><span class="align-middle" style="font-size:19px;color:seashell; "><i class="fas fa-user" ></i>   <b>Rejoindre L'équipe<b></span></div>
 
                 <div class="card-body">
                        <!--<login-form></login-form>-->
-               <form class="login-form" method="POST" action="{{ route('login') }}">
+                       <form class="login-form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
                         <div class="field is-horizontal">
@@ -21,8 +31,8 @@
                             <div class="field-body">
                                 <div class="field">
                                     <p class="control">
-                                        <input class="input" id="email" type="email" name="email"
-                                               value="{{ old('email') }}" required autofocus>
+                                            <input  class="form-control"id="email" type="email" name="email"
+                                            value="{{ old('email') }}" required autofocus>
                                     </p>
 
                                     @if ($errors->has('email'))
@@ -42,7 +52,7 @@
                             <div class="field-body">
                                 <div class="field">
                                     <p class="control">
-                                        <input class="input" id="password" type="password" name="password" required>
+                                            <input  class="form-control" id="password" type="password" name="password" required>
                                     </p>
 
                                     @if ($errors->has('password'))
@@ -75,12 +85,12 @@
                             <div class="field-body">
                                 <div class="field is-grouped">
                                     <div class="control">
-                                        <button type="submit" class="button is-primary">Login</button>
+                                            <button type="submit" class="btn btn-primary">Login</button>
                                     </div>
 
                                     <div class="control">
                                         <a href="{{ route('password.request') }}">
-                                            Forgot Your Password?
+
                                         </a>
                                     </div>
                                 </div>
@@ -91,5 +101,11 @@
             </div>
         </div>
     </div>
+
+
+
+
 </div>
+
 @endsection
+

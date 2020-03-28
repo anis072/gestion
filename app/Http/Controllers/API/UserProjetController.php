@@ -8,7 +8,7 @@ use App\Http\Controllers\BaseController ;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Projet;
-use App\userprojet;
+use App\ProjetUser;
 use App\User;
 
 
@@ -47,7 +47,7 @@ class UserProjetController extends Controller
 
           foreach($request->membre_id as $id_mem){
           $membre = User::where('id' , $id_mem)->first();
-          $userprojet = new userprojet;
+          $userprojet = new ProjetUser;
           $userprojet->user_id = $id_mem;
           $userprojet->membre = $membre->name;
           $userprojet->role=$membre->role;
@@ -72,7 +72,7 @@ class UserProjetController extends Controller
         $projet = Projet::latest()->orderBy('created_at','DESC')->first();
 
         $chef = User::where('id' , $request->chefprojet)->first();
-        $userprojet = new userprojet;
+        $userprojet = new ProjetUser;
         /**  if ($this->authorize('Chef')){
              $userprojet->user_id =auth()->user()->id;
             $userprojet->membre = auth()->user()->name;
@@ -109,7 +109,7 @@ class UserProjetController extends Controller
         $projet = Projet::latest()->orderBy('created_at','DESC')->first();
 
 
-        $userprojet = new userprojet;
+        $userprojet = new ProjetUser;
         $userprojet->user_id =auth()->user()->id;
         $userprojet->membre = auth()->user()->name;
         $userprojet->role=auth()->user()->role;
@@ -132,7 +132,7 @@ class UserProjetController extends Controller
     public function show()
     {
         //
-        return userprojet::latest()->paginate(100);
+        return ProjetUser::latest()->paginate(100);
     }
     public function showrole(){
 

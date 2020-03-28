@@ -26,7 +26,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                   <tr v-for="projet in projets" :key="projet.id" >
+                   <tr v-for="projet in projets.data" :key="projet.id" >
                <router-link :to="`/detail/${projet.id}`" style="text-decoration:none; color:black;">        <td>{{ projet.name }}</td></router-link>
 
                       <td>{{ projet.owner }}</td>
@@ -71,7 +71,9 @@
                 </table>
               </div>
               <!-- /.card-body -->
+
             </div>
+            <pagination :data="projets" @pagination-change-page="getResults"></pagination>
             </div>
         </div>
  <div v-if="!$acces.Admin()">
@@ -91,7 +93,7 @@
 
       <form @submit.prevent=" x ? modifier():ajouterProjet()">
           <div class="modal-body">
-          <div class="form-group">
+     <div class="form-group">
       <label>Nom</label>
       <input v-model="form.name" type="text" name="name"
         class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
@@ -171,7 +173,7 @@
              data(){
                  return{
                      x:false,
-              projets:[],
+              projets:{},
               projet:{
                   id:''
               },
@@ -235,7 +237,12 @@
                  });
 
                        },
-           methods:{
+           methods:{getResults(page = 1) {
+			axios.get('api/projet?page=' + page)
+				.then(response => {
+					this.projets = response.data;
+				});
+		},
                ajouterProjet(){
                 this.form.post("api/projet").then(()=>this.form.post('api/chefdeprojet').then(()=>this.form.post('api/userprojet').then(()=>{
                 fire.$emit('ajoutprojet');
@@ -322,7 +329,7 @@
                      this.desc=$description;
                    },
                afficherProjet(){
-                   axios.get('api/projet').then(({ data }) =>(this.projets = data.data));
+                   axios.get('api/projet').then(({ data }) =>(this.projets = data));
                    },
                     afficherMembres() {
                 axios.get("api/membrep").then(({ data }) => (this.membres = data.data));

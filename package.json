@@ -24,8 +24,10 @@
     "vue-template-compiler": "^2.6.10"
   },
   "dependencies": {
+    "@types/dhtmlxgantt": "^6.0.2",
     "admin-lte": "^3.0.2",
     "babel-runtime": "^6.26.0",
+    "dhtmlx-gantt": "^6.3.7",
     "moment": "^2.24.0",
     "sweetalert2": "^9.8.2",
     "vform": "^1.0.1",

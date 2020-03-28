@@ -7,7 +7,7 @@
             <h3 class="card-title">Les Projets:</h3>
 
             <div class="card-tools">
-   <button class="btn btn-success ml-6 mb-3" v-show="" @click="newer" ><i class="fas fa-project-diagram"></i> Ajouter</button>
+   <button class="btn btn-success ml-6 mb-3" v-show="$acces.Chef()" @click="newer" ><i class="fas fa-project-diagram"></i> Ajouter</button>
               <div class="input-group input-group-sm" style="width: 150px;"></div>
             </div>
           </div>
@@ -29,9 +29,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="projet in projets" :key="projet.projet_id">
+                <tr v-for="projet in projets" :key="projet.id">
                   <router-link
-                    :to="`/detail/${projet.projet_id}`" style="text-decoration:none; color:black;">
+                    :to="`/detail/${projet.id}`" style="text-decoration:none; color:black;">
                     <td>{{ projet.name }}</td>
                   </router-link>
                   <td>{{ projet.owner }}</td>
@@ -45,7 +45,7 @@
 
                   <td >{{projet.budget}}</td>
                            <td v-if="$acces.Chef()"><a href="#" class="btn" @click="editProjet(projet)"  style="background-color: #00a8cc"><i style="color:#fff" class="fas fa-user-edit"></i></a>
-                           <a href="#" class="btn btn-danger" @click="deleteProjet(projet.projet_id)" ><i class="fas fa-trash-alt"></i></a></td>
+                           <a href="#" class="btn btn-danger" @click="deleteProjet(projet.id)" ><i class="fas fa-trash-alt"></i></a></td>
 
                       <!-- Modal -->
                             <div class="modal fade" id="description" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -69,7 +69,6 @@
                             </div>
 
                     </tr>
-
               </tbody>
             </table>
           </div>
@@ -195,7 +194,7 @@ export default {
       chef:{
           id:'',
           name:''},
-      projets:[],
+      projets:{},
       projet:{
           user_id:'',
           name:'',
@@ -220,7 +219,7 @@ export default {
          },
   methods: {
             afficherProjet(){
-            axios.get("/api/getProjectsUserConnecte").then(({ data }) => (this.projets = data.data));
+            axios.get("/api/getProjectsUserConnecte").then(({ data }) => (this.projets = data));
             },
              ajouterProjet(){
                 this.form.post("api/projet")
@@ -275,10 +274,9 @@ export default {
             },
             modifier(){
 
-               axios.put('api/projetup/'+ this.form.id).then(function(){
+          this.form.put('api/projet/'+ this.form.id).then(function(){
 
              $('#AjouterProjet').modal('hide')
-
                     seww.fire(
                     'Modifier!',
                     'Your User has been Updated.',
@@ -315,7 +313,7 @@ export default {
   computed:{
       currentUser:{
             get(){
-    return    this.$store.dispatch('currentUser/getUser');
+             return    this.$store.dispatch('currentUser/getUser');
    }
       }
 
